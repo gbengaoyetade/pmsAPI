@@ -11,8 +11,13 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', routes);
 const port = process.env.PORT || 8080;
-app.listen(port, (error) => {
-  if (!error) {
-    console.log(`Listening on port ${port}`);
-  }
-});
+
+if (require.main === module) {
+  app.listen(port, (error) => {
+    if (!error) {
+      console.log(`Listening on port ${port}`);
+    }
+  });
+}
+
+export default app;

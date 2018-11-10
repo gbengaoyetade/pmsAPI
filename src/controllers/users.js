@@ -14,14 +14,13 @@ class UsersController {
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
         };
-        res.status(201).send({ message: 'User created successfully', user: userDetails });
+        return res.status(201).send({ message: 'User created successfully', user: userDetails });
       })
       .catch((error) => {
         if (error.name === 'SequelizeUniqueConstraintError') {
-          res.status(409).send({ error: 'Email address already in use' });
-        } else {
-          sendInternalServerError(res);
+          return res.status(409).send({ error: 'Email address already in use' });
         }
+        return sendInternalServerError(res);
       });
   }
 }
