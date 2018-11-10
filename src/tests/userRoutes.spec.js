@@ -1,11 +1,11 @@
 import { emptyDatabase } from '../utils';
 
+const user = { email: 'test@web.com', password: 'user-password' };
 describe('Users', () => {
   beforeAll(async () => {
     await emptyDatabase();
   });
   describe('Create User', () => {
-    const user = { email: 'test@web.com', password: 'user-password' };
     it('should send error message when input fields are missing', (done) => {
       request
         .post('/api/v1/users')
@@ -49,6 +49,54 @@ describe('Users', () => {
         .end((err, res) => {
           expect(res.statusCode).toBe(409);
           expect(res.body.error).toBe('Email address already in use');
+          done();
+        });
+    });
+  });
+
+  describe('User Login', () => {
+    it('should send error message when required fields are empty', (done) => {
+      request
+        .post('/api/v1/users/login')
+        .send()
+        .end((err, res) => {
+          expect(res.statusCode).toBe(400);
+          expect(res.body.error.email).toBe('Requires email field');
+          expect(res.body.error.password).toBe('Requires password field');
+          done();
+        });
+    });
+
+    it('should send error message when email is incorrect', (done) => {
+      request
+        .post('/api/v1/users/login')
+        .send({ email: 'wrong@mail.com', password: user.password })
+        .end((err, res) => {
+          expect(res.statusCode).toBe(401);
+          expect(res.body.error).toBe('Incorrect email address supplied');
+          done();
+        });
+    });
+
+    it('should send error message when password is incorrect', (done) => {
+      request
+        .post('/api/v1/users/login')
+        .send({ email: user.email, password: 'password' })
+        .end((err, res) => {
+          expect(res.statusCode).toBe(401);
+          expect(res.body.error).toBe('Incorrect password supplied');
+          done();
+        });
+    });
+
+    it('should send token when login is successful', (done) => {
+      request
+        .post('/api/v1/users/login')
+        .send(user)
+        .end((err, res) => {
+          expect(res.statusCode).toBe(200);
+          expect(res.body.message).toBe('Login successful');
+          expect(res.body.token).toBeDefined();
           done();
         });
     });
