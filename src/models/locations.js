@@ -33,7 +33,7 @@ const locations = (sequelize, DataTypes) => {
     {},
   );
   Locations.beforeCreate((location) => {
-    location.total = Number(location.totalFemale) + Number(location.totalMale);
+    location.total = Number(location.totalFemale) + Number(location.totalMale); // eslint-disable-line
   });
   Locations.associate = (models) => {
     Locations.belongsTo(models.Users, {
