@@ -1,6 +1,6 @@
 require('dotenv').load();
 
-const config = {
+module.exports = {
   development: {
     use_env_variable: 'DEV_DB',
     dialect: 'postgres',
@@ -12,4 +12,3 @@ const config = {
     logging: false,
   },
 };
-export default config;
