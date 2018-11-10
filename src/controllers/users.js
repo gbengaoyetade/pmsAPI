@@ -1,5 +1,6 @@
+import bcrypt from 'bcryptjs';
 import db from '../models';
-import { sendInternalServerError } from '../utils';
+import { sendInternalServerError, generateToken } from '../utils';
 
 const { Users } = db;
 
@@ -22,6 +23,23 @@ class UsersController {
         }
         return sendInternalServerError(res);
       });
+  }
+
+  static login(req, res) {
+    const { email, password } = req.body;
+    Users.findOne({ where: { email } }).then((user) => {
+      if (!user) {
+        res.status(401).send({ error: 'Incorrect email address supplied' });
+      } else {
+        const isCorrectPassword = bcrypt.compareSync(password, user.password);
+        if (isCorrectPassword) {
+          const token = generateToken({ email, role: user.role });
+          res.send({ message: 'Login successful', token });
+        } else {
+          res.status(401).send({ error: 'Incorrect password supplied' });
+        }
+      }
+    });
   }
 }
 
