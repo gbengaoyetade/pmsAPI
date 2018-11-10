@@ -15,6 +15,14 @@ const routesValidations = {
       .isLength({ min: 6 })
       .withMessage('Password length cannot be less than 6 characters'),
   ],
+  login: [
+    body('email')
+      .exists()
+      .withMessage('Requires email field'),
+    body('password')
+      .exists()
+      .withMessage('Requires password field'),
+  ],
 };
 
 export default routesValidations;

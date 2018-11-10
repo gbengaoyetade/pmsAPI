@@ -12,4 +12,5 @@ routes.post(
   UsersController.create,
 );
 
+routes.post('/users/login', routesValidations.login, sendValidationErrors, UsersController.login);
 export default routes;
