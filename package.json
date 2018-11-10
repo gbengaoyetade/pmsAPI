@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "verbose": true,
+    "collectCoverageFrom": [
+      "src/**/*.(js)",
+      "!src/migrations/*.(js)"
+    ],
+    "setupTestFrameworkScriptFile": "./src/utils/jestSetup.js"
+  },
   "scripts": {
     "start": "./node_modules/.bin/nodemon  --exec ./node_modules/.bin/babel-node ./src/app.js ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "export NODE_ENV=test && ./node_modules/.bin/jest  --detectOpenHandles",
+    "test:cover": "export NODE_ENV=test && ./node_modules/.bin/jest  --coverage"
   },
   "keywords": [],
   "author": "",
