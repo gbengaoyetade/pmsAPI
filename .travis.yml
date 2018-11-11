@@ -5,7 +5,6 @@ services:
   - "postgres"
 before_script:
   - npm install sequelize-cli -g
-  - psql -c "CREATE USER andeladeveloper;" -U postgres
   - psql -c "CREATE DATABASE pms_test;" -U postgres
   - sequelize db:migrate --env test
 after_success:
