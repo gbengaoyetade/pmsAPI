@@ -31,13 +31,14 @@ class UsersController {
       if (!user) {
         res.status(401).send({ error: 'Incorrect email address supplied' });
       } else {
-        const isCorrectPassword = bcrypt.compareSync(password, user.password);
-        if (isCorrectPassword) {
-          const token = generateToken({ email, role: user.role });
-          res.send({ message: 'Login successful', token });
-        } else {
-          res.status(401).send({ error: 'Incorrect password supplied' });
-        }
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (result) {
+            const token = generateToken({ email, role: user.role });
+            res.send({ message: 'Login successful', token });
+          } else {
+            res.status(401).send({ error: 'Incorrect password supplied' });
+          }
+        });
       }
     });
   }
