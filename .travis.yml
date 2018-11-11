@@ -1,11 +1,19 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=fa741adafab9a05b5f1a191b275e323ab2df8ae460c3986c351d3b0d1dee8b67
 language: node_js
 node_js:
   - "stable"
 services:
   - "postgres"
 before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
   - npm install sequelize-cli -g
   - psql -c "CREATE DATABASE pms_test;" -U postgres
   - sequelize db:migrate --env test
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_success:
   - npm run test:cover
