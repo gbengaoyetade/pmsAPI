@@ -99,6 +99,6 @@ describe('Users', () => {
           expect(res.body.token).toBeDefined();
           done();
         });
-    }, 10000);
+    });
   });
 });
