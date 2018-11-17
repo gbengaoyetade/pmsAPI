@@ -23,6 +23,32 @@ const routesValidations = {
       .exists()
       .withMessage('Requires password field'),
   ],
+  createLocation: [
+    body('name')
+      .exists()
+      .withMessage('name field is required')
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage('name length cannot be less than two characters')
+      .matches(/^([a-zA-Z]+\s*)+$/)
+      .withMessage('Name not properly formed'),
+    body('totalFemale')
+      .exists()
+      .withMessage('totalFemale field is required')
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value'),
+    body('totalMale')
+      .exists()
+      .withMessage('totalMale field is required')
+      .isNumeric()
+      .withMessage('Expects a numeric value'),
+    body('parentId')
+      .optional()
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value'),
+  ],
 };
 
 export default routesValidations;
