@@ -2,6 +2,6 @@ extends: airbnb-base
 env:
   jest: true
 rules:
-  max-line-length: [true, 80]
+  max-line-length: [1, 80]
 globals:
   request: true

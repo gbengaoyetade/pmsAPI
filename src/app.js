@@ -10,8 +10,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1', routes);
-const port = process.env.PORT || 8080;
 
+app.all('*', (req, res) => {
+  res.status(404).send({ error: 'Route does not exist' });
+});
+
+const port = process.env.PORT || 8080;
 if (require.main === module) {
   app.listen(port, (error) => {
     if (!error) {

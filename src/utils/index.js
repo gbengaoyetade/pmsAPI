@@ -18,6 +18,26 @@ const generateToken = (payload) => {
   const userToken = jwt.sign({ ...payload }, secret, { expiresIn: '24h' });
   return userToken;
 };
+
+const getUserId = (token) => {
+  const decodedToken = jwt.decode(token, process.env.SECRET);
+  return decodedToken.userId;
+};
+
+const verifyUser = async (token) => {
+  const userId = getUserId(token);
+  const user = await Users.findOne({ where: { id: userId } });
+  if (user) {
+    return { email: user.email, id: user.id, role: user.role };
+  }
+  return undefined;
+};
+
 export {
-  routesValidations, sendInternalServerError, emptyDatabase, generateToken,
+  routesValidations,
+  sendInternalServerError,
+  emptyDatabase,
+  generateToken,
+  getUserId,
+  verifyUser,
 };
