@@ -1,7 +1,7 @@
 const now = new Date().toISOString();
 const user = {
   email: 'pms-admin@admin.com',
-  password: 'password',
+  password: process.env.ADMIN_PASSWORD || 'password',
   role: 'admin',
   createdAt: now,
   updatedAt: now,
