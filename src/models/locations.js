@@ -46,25 +46,24 @@ const locations = (sequelize, DataTypes) => {
     if (!parentId) {
       return false;
     }
-    try {
-      const parentLocation = await Locations.findByPk(parentId);
-      const {
-        total: parentTotal,
-        totalFemale: parentFemale,
-        totalMale: parentMale,
-      } = parentLocation;
 
-      const newParentDetails = {
-        total: parentTotal + childTotal,
-        totalFemale: parentFemale + childFemale,
-        totalMale: parentMale + childMale,
-      };
-      await Locations.update({ ...newParentDetails }, { where: { id: parentId } });
-      return true;
-    } catch (error) {
-      // console.log(error);
-      throw new Error(error);
-    }
+    const parentLocation = await Locations.findByPk(parentId);
+    const {
+      total: parentTotal,
+      totalFemale: parentFemale,
+      totalMale: parentMale,
+    } = parentLocation;
+
+    const newParentDetails = {
+      total: parentTotal + childTotal,
+      totalFemale: parentFemale + childFemale,
+      totalMale: parentMale + childMale,
+    };
+    await Locations.update(
+      { ...newParentDetails },
+      { where: { id: parentId } },
+    );
+    return true;
   });
 
   Locations.associate = (models) => {

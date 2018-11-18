@@ -18,15 +18,16 @@ class LocationsController {
     };
     try {
       const createdLocation = await Locations.create(location);
-      return res.status(201).send({ message: 'Location created', location: createdLocation });
+      res
+        .status(201)
+        .send({ message: 'Location created', location: createdLocation });
     } catch (error) {
       if (error.name === 'SequelizeUniqueConstraintError') {
-        return res.status(409).send({ error: 'Location name already exists' });
+        res.status(409).send({ error: 'Location name already exists' });
+      } else {
+        sendInternalServerError(res);
       }
-      console.log(error);
-      sendInternalServerError(res);
     }
-    return false;
   }
 }
 

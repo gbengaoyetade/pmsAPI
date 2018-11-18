@@ -23,18 +23,24 @@ const verifyToken = (req, res, next) => {
         const userId = getUserId(token);
         Users.findOne({ where: { id: userId } }).then((user) => {
           if (user) {
-            const userDetails = { email: user.email, id: user.id, role: user.role };
+            const userDetails = {
+              email: user.email,
+              id: user.id,
+              role: user.role,
+            };
             req.body.currentUser = userDetails;
-            next();
-          } else {
-            res.status(401).send({ error: 'User does not exist on our system' });
+            return next();
           }
+          return res
+            .status(401)
+            .send({ error: 'User does not exist on our system' });
         });
       }
     });
   } else {
-    res.status(400).send({ error: 'Token not provided' });
+    return res.status(400).send({ error: 'Token not provided' });
   }
+  return false;
 };
 
 const verifyParentLocation = async (req, res, next) => {
