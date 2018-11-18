@@ -78,6 +78,42 @@ describe('Location', () => {
         });
     });
 
+    it('should send error message when token is not provided', (done) => {
+      request
+        .post('/api/v1/location')
+        .send(location)
+        .end((err, res) => {
+          expect(res.statusCode).toBe(400);
+          expect(res.body.error).toBe('Token not provided');
+          done();
+        });
+    });
+
+    it('should send error message when an invalid token is provided', (done) => {
+      request
+        .post('/api/v1/location')
+        .set('authorization', 'invalid token')
+        .send(location)
+        .end((err, res) => {
+          expect(res.statusCode).toBe(401);
+          expect(res.body.error).toBe('Token authentication failure');
+          done();
+        });
+    });
+
+    it('should send error message when userId in token does not exist', (done) => {
+      const newToken = generateToken({ userId: '100' });
+      request
+        .post('/api/v1/location')
+        .set('authorization', newToken)
+        .send(location)
+        .end((err, res) => {
+          expect(res.statusCode).toBe(401);
+          expect(res.body.error).toBe('User does not exist on our system');
+          done();
+        });
+    });
+
     it('should create location when payload is properly structured', (done) => {
       delete location.parentId;
       request

@@ -6,7 +6,7 @@ const app = express();
 app.use(express.urlencoded());
 app.use(express.json());
 app.get('/', (req, res) => {
-  res.send('Welcome to population management API');
+  res.send({ message: 'Welcome to population management API' });
 });
 
 app.use('/api/v1', routes);
