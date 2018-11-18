@@ -33,7 +33,7 @@ class UsersController {
       } else {
         bcrypt.compare(password, user.password, (err, result) => {
           if (result) {
-            const token = generateToken({ email, role: user.role });
+            const token = generateToken({ email, role: user.role, userId: user.id });
             res.send({ message: 'Login successful', token });
           } else {
             res.status(401).send({ error: 'Incorrect password supplied' });

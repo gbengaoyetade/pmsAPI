@@ -1,10 +1,17 @@
-import { emptyDatabase } from '../utils';
+import { emptyDatabase, user, seedDatabase } from '../utils';
 
-const user = { email: 'test@web.com', password: 'user-password' };
+const anotherUser = { email: 'test@web.com', password: 'user-password' };
 describe('Users', () => {
-  beforeAll(async () => {
-    await emptyDatabase();
+  beforeAll((done) => {
+    seedDatabase();
+    done();
   });
+
+  afterAll((done) => {
+    emptyDatabase();
+    done();
+  });
+
   describe('Create User', () => {
     it('should send error message when input fields are missing', (done) => {
       request
@@ -24,7 +31,9 @@ describe('Users', () => {
         .send({ email: '@nothing', password: '       ' })
         .end((err, res) => {
           expect(res.statusCode).toBe(400);
-          expect(res.body.error.password).toBe('Password length cannot be less than 6 characters');
+          expect(res.body.error.password).toBe(
+            'Password length cannot be less than 6 characters',
+          );
           expect(res.body.error.email).toBe('Expect an email address');
           done();
         });
@@ -33,11 +42,11 @@ describe('Users', () => {
     it('should create user when details are properly formed', (done) => {
       request
         .post('/api/v1/users')
-        .send(user)
+        .send(anotherUser)
         .end((err, res) => {
           expect(res.statusCode).toBe(201);
           expect(res.body.message).toBe('User created successfully');
-          expect(res.body.user.email).toBe(user.email);
+          expect(res.body.user.email).toBe(anotherUser.email);
           done();
         });
     });
@@ -45,7 +54,7 @@ describe('Users', () => {
     it('should send error message when user is already created', (done) => {
       request
         .post('/api/v1/users')
-        .send(user)
+        .send(anotherUser)
         .end((err, res) => {
           expect(res.statusCode).toBe(409);
           expect(res.body.error).toBe('Email address already in use');
@@ -81,7 +90,7 @@ describe('Users', () => {
     it('should send error message when password is incorrect', (done) => {
       request
         .post('/api/v1/users/login')
-        .send({ email: user.email, password: 'password' })
+        .send({ email: anotherUser.email, password: 'password' })
         .end((err, res) => {
           expect(res.statusCode).toBe(401);
           expect(res.body.error).toBe('Incorrect password supplied');

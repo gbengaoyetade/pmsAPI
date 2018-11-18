@@ -1,6 +1,10 @@
 import { Router } from 'express';
-import { UsersController } from './controllers';
-import sendValidationErrors from './middleware';
+import { UsersController, LocationsController } from './controllers';
+import {
+  sendValidationErrors,
+  verifyToken,
+  verifyParentLocation,
+} from './middleware';
 import { routesValidations } from './utils';
 
 const routes = Router();
@@ -12,5 +16,18 @@ routes.post(
   UsersController.create,
 );
 
-routes.post('/users/login', routesValidations.login, sendValidationErrors, UsersController.login);
+routes.post(
+  '/users/login',
+  routesValidations.login,
+  sendValidationErrors,
+  UsersController.login,
+);
+routes.post(
+  '/location',
+  routesValidations.createLocation,
+  sendValidationErrors,
+  verifyToken,
+  verifyParentLocation,
+  LocationsController.create,
+);
 export default routes;

@@ -6,12 +6,16 @@ const app = express();
 app.use(express.urlencoded());
 app.use(express.json());
 app.get('/', (req, res) => {
-  res.send('Welcome to population management API');
+  res.send({ message: 'Welcome to population management API' });
 });
 
 app.use('/api/v1', routes);
-const port = process.env.PORT || 8080;
 
+app.all('*', (req, res) => {
+  res.status(404).send({ error: 'Route does not exist' });
+});
+
+const port = process.env.PORT || 8080;
 if (require.main === module) {
   app.listen(port, (error) => {
     if (!error) {
