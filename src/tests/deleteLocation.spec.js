@@ -1,29 +1,12 @@
-import { user, generateToken, emptyDatabase } from '../utils';
+import {
+  user,
+  generateToken,
+  emptyDatabase,
+  location,
+  anotherLocation,
+  anotherUser,
+} from '../utils';
 import db from '../models';
-
-const location = {
-  name: 'isolo',
-  totalMale: '3000',
-  totalFemale: '2999',
-  total: '5999',
-  createdBy: '1',
-  updatedBy: '1',
-};
-const anotherLocation = {
-  name: 'okota',
-  totalMale: '30',
-  totalFemale: '20',
-  total: '50',
-  createdBy: '1',
-  updatedBy: '1',
-  parentId: '1',
-};
-const anotherUser = {
-  email: 'sage@admin.com',
-  role: 'user',
-  password: 'password',
-  userId: '2',
-};
 
 const userRoleToken = generateToken(anotherUser);
 describe('Delete Location', () => {
@@ -73,18 +56,14 @@ describe('Delete Location', () => {
   });
 
   it('should delete location when all conditions are satisfied', async (done) => {
-    const parentLocation = await db.Locations.findByPk(1);
-    expect(parentLocation.total).toBe(
-      Number(location.total) + Number(anotherLocation.total),
-    );
     request
       .delete('/api/v1/location/2')
       .set('authorization', token)
       .end(async (err, res) => {
-        const parentLocationAfterDelete = await db.Locations.findByPk(1);
+        const deletedLocation = await db.Locations.findByPk(2);
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Location deleted successfully');
-        expect(parentLocationAfterDelete.total).toBe(Number(location.total));
+        expect(deletedLocation).toBeFalsy();
         done();
       });
   });

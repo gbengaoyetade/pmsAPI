@@ -1,7 +1,6 @@
 import {
   user, generateToken, emptyDatabase, seedDatabase,
 } from '../utils';
-import db from '../models';
 
 describe('Create location', () => {
   beforeAll((done) => {
@@ -128,31 +127,6 @@ describe('Create location', () => {
           Number(location.totalFemale),
         );
         expect(res.body.location.totalMale).toBe(Number(location.totalMale));
-        done();
-      });
-  });
-
-  it('should update immediate parent location when parentId is supplied', async (done) => {
-    const newLocation = {
-      name: 'Mende',
-      totalFemale: '12',
-      totalMale: '10',
-      parentId: '1',
-    };
-    request
-      .post('/api/v1/location')
-      .set('authorization', token)
-      .send(newLocation)
-      .end(async (err, res) => {
-        const updatedParentLocation = await db.Locations.findByPk(1);
-        expect(res.statusCode).toBe(201);
-        expect(res.body.location.name).toBe(newLocation.name);
-        expect(updatedParentLocation.total).toBe(
-          Number(newLocation.totalFemale)
-            + Number(newLocation.totalMale)
-            + Number(location.totalFemale)
-            + Number(location.totalMale),
-        );
         done();
       });
   });
