@@ -2,7 +2,13 @@ import jwt from 'jsonwebtoken';
 import routesValidations from './routesValidations';
 import db from '../models';
 import {
-  user, now, DEFAULT_LIMIT, DEFAULT_OFFSET,
+  user,
+  now,
+  DEFAULT_LIMIT,
+  DEFAULT_OFFSET,
+  location,
+  anotherLocation,
+  anotherUser,
 } from './constants';
 
 const { Users, Locations } = db;
@@ -32,24 +38,12 @@ const getUserId = (token) => {
   return decodedToken.userId;
 };
 
-const updateParentLocation = async (childLocation, isDelete) => {
-  const {
-    totalMale, totalFemale, parentId, total,
-  } = childLocation;
-  const parentLocation = await Locations.findByPk(parentId);
-  let newParentLocation = {
-    totalFemale: Number(parentLocation.totalFemale) + Number(totalFemale),
-    totalMale: Number(parentLocation.totalMale) + Number(totalMale),
-    total: Number(parentLocation.total) + Number(total),
-  };
-  if (isDelete) {
-    newParentLocation = {
-      totalFemale: Number(parentLocation.totalFemale) - Number(totalFemale),
-      totalMale: Number(parentLocation.totalMale) - Number(totalMale),
-      total: Number(parentLocation.total) - Number(total),
-    };
+const sendLocationCatchError = (error, res) => {
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    res.status(409).send({ error: 'Location name already exists' });
+  } else {
+    sendInternalServerError(res);
   }
-  await Locations.update({ ...newParentLocation }, { where: { id: parentId } });
 };
 
 export {
@@ -59,9 +53,12 @@ export {
   generateToken,
   getUserId,
   seedDatabase,
-  updateParentLocation,
+  sendLocationCatchError,
   now,
   user,
+  location,
+  anotherLocation,
+  anotherUser,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
 };

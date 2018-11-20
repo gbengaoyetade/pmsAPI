@@ -1,7 +1,7 @@
 import db from '../models';
 import {
   sendInternalServerError,
-  updateParentLocation,
+  sendLocationCatchError,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
 } from '../utils';
@@ -27,11 +27,7 @@ class LocationsController {
         .status(201)
         .send({ message: 'Location created', location: createdLocation });
     } catch (error) {
-      if (error.name === 'SequelizeUniqueConstraintError') {
-        res.status(409).send({ error: 'Location name already exists' });
-      } else {
-        sendInternalServerError(res);
-      }
+      sendLocationCatchError(error, res);
     }
   }
 
@@ -59,6 +55,38 @@ class LocationsController {
     }
   }
 
+  static async updateLocation(req, res) {
+    const { id } = req.params;
+    const { body } = req;
+
+    delete body.parentId;
+    delete body.id;
+
+    const location = await Locations.findByPk(id);
+    if (!location) {
+      res.status(404).send({ error: 'Location does not exist' });
+    } else {
+      const newLocationDetails = {
+        totalFemale: body.totalFemale || location.totalFemale,
+        totalMale: body.totalMale || location.totalMale,
+        name: body.name || location.name,
+      };
+      newLocationDetails.total = Number(newLocationDetails.totalFemale)
+        + Number(newLocationDetails.totalMale);
+      try {
+        await Locations.update(newLocationDetails, { where: { id } });
+        const updatedLocation = await Locations.findByPk(id);
+
+        res.send({
+          message: 'Location updated successfully',
+          location: updatedLocation,
+        });
+      } catch (error) {
+        sendLocationCatchError(error, res);
+      }
+    }
+  }
+
   static async deleteLocation(req, res) {
     const { id } = req.params;
 
@@ -67,10 +95,6 @@ class LocationsController {
       if (!location) {
         res.status(404).send({ error: 'Location does not exist' });
       } else {
-        if (location.parentId) {
-          await updateParentLocation(location, true);
-        }
-
         await Locations.destroy({ where: { id } });
         res.send({ message: 'Location deleted successfully' });
       }
