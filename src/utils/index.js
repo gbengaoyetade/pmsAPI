@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
 import routesValidations from './routesValidations';
 import db from '../models';
-import { user, now } from './constants';
+import {
+  user, now, DEFAULT_LIMIT, DEFAULT_OFFSET,
+} from './constants';
 
 const { Users, Locations } = db;
 
@@ -39,4 +41,6 @@ export {
   seedDatabase,
   now,
   user,
+  DEFAULT_LIMIT,
+  DEFAULT_OFFSET,
 };
