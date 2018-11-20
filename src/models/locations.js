@@ -71,6 +71,13 @@ const locations = (sequelize, DataTypes) => {
       foreignKey: 'createdBy',
     });
   };
+
+  Locations.associate = (models) => {
+    Locations.hasOne(models.Locations, {
+      foreignKey: 'parentId',
+      as: 'childLocation',
+    });
+  };
   return Locations;
 };
 

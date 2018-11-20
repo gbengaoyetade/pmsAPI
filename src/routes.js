@@ -22,6 +22,7 @@ routes.post(
   sendValidationErrors,
   UsersController.login,
 );
+
 routes.post(
   '/location',
   routesValidations.createLocation,
@@ -29,5 +30,13 @@ routes.post(
   verifyToken,
   verifyParentLocation,
   LocationsController.create,
+);
+
+routes.get(
+  '/locations',
+  routesValidations.getAllLocation,
+  sendValidationErrors,
+  verifyToken,
+  LocationsController.getAll,
 );
 export default routes;

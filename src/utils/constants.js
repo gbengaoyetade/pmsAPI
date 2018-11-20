@@ -7,4 +7,10 @@ const user = {
   updatedAt: now,
 };
 
-export { user, now };
+const DEFAULT_LIMIT = 10;
+
+const DEFAULT_OFFSET = 0;
+
+export {
+  user, now, DEFAULT_LIMIT, DEFAULT_OFFSET,
+};
