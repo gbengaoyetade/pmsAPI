@@ -41,6 +41,14 @@ routes.post(
   LocationsController.create,
 );
 
+routes.patch(
+  '/location/:id',
+  routesValidations.updateLocation,
+  sendValidationErrors,
+  verifyToken,
+  LocationsController.updateLocation,
+);
+
 routes.delete(
   '/location/:id',
   routesValidations.deleteLocation,

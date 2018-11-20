@@ -69,6 +69,30 @@ const routesValidations = {
       .isNumeric()
       .withMessage('Expects a numeric value for id'),
   ],
+  updateLocation: [
+    param('id')
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value for id'),
+    body('totalMale')
+      .optional()
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value for id'),
+    body('totalFemale')
+      .optional()
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value for id'),
+    body('name')
+      .optional()
+      .withMessage('name field is required')
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage('name length cannot be less than two characters')
+      .matches(/^([a-zA-Z]+\s*)+$/)
+      .withMessage('Name not properly formed'),
+  ],
 };
 
 export default routesValidations;
