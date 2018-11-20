@@ -4,10 +4,19 @@ import {
   sendValidationErrors,
   verifyToken,
   verifyParentLocation,
+  protectRouteForAdmin,
 } from './middleware';
 import { routesValidations } from './utils';
 
 const routes = Router();
+
+routes.get(
+  '/locations',
+  routesValidations.getAllLocation,
+  sendValidationErrors,
+  verifyToken,
+  LocationsController.getAll,
+);
 
 routes.post(
   '/users',
@@ -32,11 +41,12 @@ routes.post(
   LocationsController.create,
 );
 
-routes.get(
-  '/locations',
-  routesValidations.getAllLocation,
+routes.delete(
+  '/location/:id',
+  routesValidations.deleteLocation,
   sendValidationErrors,
   verifyToken,
-  LocationsController.getAll,
+  protectRouteForAdmin,
+  LocationsController.deleteLocation,
 );
 export default routes;

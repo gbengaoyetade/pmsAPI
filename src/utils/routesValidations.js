@@ -1,4 +1,4 @@
-import { body, query } from 'express-validator/check';
+import { body, query, param } from 'express-validator/check';
 
 const routesValidations = {
   createAccount: [
@@ -61,6 +61,13 @@ const routesValidations = {
       .optional()
       .isNumeric()
       .withMessage('offset has to be a number'),
+  ],
+
+  deleteLocation: [
+    param('id')
+      .trim()
+      .isNumeric()
+      .withMessage('Expects a numeric value for id'),
   ],
 };
 

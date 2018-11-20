@@ -1,6 +1,7 @@
 import db from '../models';
 import {
   sendInternalServerError,
+  updateParentLocation,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
 } from '../utils';
@@ -55,6 +56,26 @@ class LocationsController {
       return res.status(404).send({ error: 'No locations found' });
     } catch (error) {
       return sendInternalServerError(res);
+    }
+  }
+
+  static async deleteLocation(req, res) {
+    const { id } = req.params;
+
+    try {
+      const location = await Locations.findByPk(id);
+      if (!location) {
+        res.status(404).send({ error: 'Location does not exist' });
+      } else {
+        if (location.parentId) {
+          await updateParentLocation(location, true);
+        }
+
+        await Locations.destroy({ where: { id } });
+        res.send({ message: 'Location deleted successfully' });
+      }
+    } catch (error) {
+      sendInternalServerError(res);
     }
   }
 }
