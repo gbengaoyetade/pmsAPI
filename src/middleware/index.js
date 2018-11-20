@@ -56,4 +56,19 @@ const verifyParentLocation = async (req, res, next) => {
   }
   return false;
 };
-export { sendValidationErrors, verifyToken, verifyParentLocation };
+
+const protectRouteForAdmin = async (req, res, next) => {
+  const { role } = req.body.currentUser;
+  if (role !== 'admin') {
+    return res.status(403).send({
+      error: 'You do not have the permission to perform this action',
+    });
+  }
+  return next();
+};
+export {
+  sendValidationErrors,
+  verifyToken,
+  verifyParentLocation,
+  protectRouteForAdmin,
+};

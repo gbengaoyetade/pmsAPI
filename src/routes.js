@@ -4,6 +4,7 @@ import {
   sendValidationErrors,
   verifyToken,
   verifyParentLocation,
+  protectRouteForAdmin,
 } from './middleware';
 import { routesValidations } from './utils';
 
@@ -45,6 +46,7 @@ routes.delete(
   routesValidations.deleteLocation,
   sendValidationErrors,
   verifyToken,
+  protectRouteForAdmin,
   LocationsController.deleteLocation,
 );
 export default routes;

@@ -61,29 +61,21 @@ class LocationsController {
 
   static async deleteLocation(req, res) {
     const { id } = req.params;
-    const { role } = req.body.currentUser;
-    if (role !== 'admin') {
-      res
-        .status(403)
-        .send({
-          error: 'You do not have the permission to perform this action',
-        });
-    } else {
-      try {
-        const location = await Locations.findByPk(id);
-        if (!location) {
-          res.status(404).send({ error: 'Location does not exist' });
-        } else {
-          if (location.parentId) {
-            await updateParentLocation(location, true);
-          }
 
-          await Locations.destroy({ where: { id } });
-          res.send({ message: 'Location deleted successfully' });
+    try {
+      const location = await Locations.findByPk(id);
+      if (!location) {
+        res.status(404).send({ error: 'Location does not exist' });
+      } else {
+        if (location.parentId) {
+          await updateParentLocation(location, true);
         }
-      } catch (error) {
-        sendInternalServerError(res);
+
+        await Locations.destroy({ where: { id } });
+        res.send({ message: 'Location deleted successfully' });
       }
+    } catch (error) {
+      sendInternalServerError(res);
     }
   }
 }
