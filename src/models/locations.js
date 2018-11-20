@@ -36,36 +36,6 @@ const locations = (sequelize, DataTypes) => {
     location.total = Number(location.totalFemale) + Number(location.totalMale); // eslint-disable-line
   });
 
-  Locations.afterCreate(async (childLocation) => {
-    const {
-      parentId,
-      total: childTotal,
-      totalFemale: childFemale,
-      totalMale: childMale,
-    } = childLocation.dataValues;
-    if (!parentId) {
-      return false;
-    }
-
-    const parentLocation = await Locations.findByPk(parentId);
-    const {
-      total: parentTotal,
-      totalFemale: parentFemale,
-      totalMale: parentMale,
-    } = parentLocation;
-
-    const newParentDetails = {
-      total: parentTotal + childTotal,
-      totalFemale: parentFemale + childFemale,
-      totalMale: parentMale + childMale,
-    };
-    await Locations.update(
-      { ...newParentDetails },
-      { where: { id: parentId } },
-    );
-    return true;
-  });
-
   Locations.associate = (models) => {
     Locations.belongsTo(models.Users, {
       foreignKey: 'createdBy',
