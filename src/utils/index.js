@@ -32,6 +32,26 @@ const getUserId = (token) => {
   return decodedToken.userId;
 };
 
+const updateParentLocation = async (childLocation, isDelete) => {
+  const {
+    totalMale, totalFemale, parentId, total,
+  } = childLocation;
+  const parentLocation = await Locations.findByPk(parentId);
+  let newParentLocation = {
+    totalFemale: Number(parentLocation.totalFemale) + Number(totalFemale),
+    totalMale: Number(parentLocation.totalMale) + Number(totalMale),
+    total: Number(parentLocation.total) + Number(total),
+  };
+  if (isDelete) {
+    newParentLocation = {
+      totalFemale: Number(parentLocation.totalFemale) - Number(totalFemale),
+      totalMale: Number(parentLocation.totalMale) - Number(totalMale),
+      total: Number(parentLocation.total) - Number(total),
+    };
+  }
+  await Locations.update({ ...newParentLocation }, { where: { id: parentId } });
+};
+
 export {
   routesValidations,
   sendInternalServerError,
@@ -39,6 +59,7 @@ export {
   generateToken,
   getUserId,
   seedDatabase,
+  updateParentLocation,
   now,
   user,
   DEFAULT_LIMIT,
