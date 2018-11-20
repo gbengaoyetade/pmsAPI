@@ -9,6 +9,14 @@ import { routesValidations } from './utils';
 
 const routes = Router();
 
+routes.get(
+  '/locations',
+  routesValidations.getAllLocation,
+  sendValidationErrors,
+  verifyToken,
+  LocationsController.getAll,
+);
+
 routes.post(
   '/users',
   routesValidations.createAccount,
@@ -32,11 +40,11 @@ routes.post(
   LocationsController.create,
 );
 
-routes.get(
-  '/locations',
-  routesValidations.getAllLocation,
+routes.delete(
+  '/location/:id',
+  routesValidations.deleteLocation,
   sendValidationErrors,
   verifyToken,
-  LocationsController.getAll,
+  LocationsController.deleteLocation,
 );
 export default routes;
