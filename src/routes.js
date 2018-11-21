@@ -19,14 +19,14 @@ routes.get(
 );
 
 routes.post(
-  '/users',
+  '/user',
   routesValidations.createAccount,
   sendValidationErrors,
   UsersController.create,
 );
 
 routes.post(
-  '/users/login',
+  '/user/login',
   routesValidations.login,
   sendValidationErrors,
   UsersController.login,
