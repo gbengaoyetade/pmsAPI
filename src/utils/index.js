@@ -46,6 +46,20 @@ const sendLocationCatchError = (error, res) => {
   }
 };
 
+const updateParentLocation = async (childLocation) => {
+  const {
+    totalMale, totalFemale, parentId, total,
+  } = childLocation;
+  const parentLocation = await Locations.findByPk(parentId);
+
+  const newParentLocation = {
+    totalFemale: Number(parentLocation.totalFemale) - Number(totalFemale),
+    totalMale: Number(parentLocation.totalMale) - Number(totalMale),
+    total: Number(parentLocation.total) - Number(total),
+  };
+  await Locations.update({ ...newParentLocation }, { where: { id: parentId } });
+};
+
 export {
   routesValidations,
   sendInternalServerError,
@@ -59,6 +73,7 @@ export {
   location,
   anotherLocation,
   anotherUser,
+  updateParentLocation,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
 };
