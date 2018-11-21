@@ -2,6 +2,7 @@ import db from '../models';
 import {
   sendInternalServerError,
   sendLocationCatchError,
+  updateParentLocation,
   DEFAULT_LIMIT,
   DEFAULT_OFFSET,
 } from '../utils';
@@ -95,6 +96,9 @@ class LocationsController {
       if (!location) {
         res.status(404).send({ error: 'Location does not exist' });
       } else {
+        if (location.parentId) {
+          await updateParentLocation(location);
+        }
         await Locations.destroy({ where: { id } });
         res.send({ message: 'Location deleted successfully' });
       }

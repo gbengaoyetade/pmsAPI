@@ -15,7 +15,7 @@ describe('Users', () => {
   describe('Create User', () => {
     it('should send error message when input fields are missing', (done) => {
       request
-        .post('/api/v1/users')
+        .post('/api/v1/user')
         .send()
         .end((err, res) => {
           expect(res.statusCode).toBe(400);
@@ -27,7 +27,7 @@ describe('Users', () => {
 
     it('should send error message when input are not properly formed', (done) => {
       request
-        .post('/api/v1/users')
+        .post('/api/v1/user')
         .send({ email: '@nothing', password: '       ' })
         .end((err, res) => {
           expect(res.statusCode).toBe(400);
@@ -41,7 +41,7 @@ describe('Users', () => {
 
     it('should create user when details are properly formed', (done) => {
       request
-        .post('/api/v1/users')
+        .post('/api/v1/user')
         .send(anotherUser)
         .end((err, res) => {
           expect(res.statusCode).toBe(201);
@@ -53,7 +53,7 @@ describe('Users', () => {
 
     it('should send error message when user is already created', (done) => {
       request
-        .post('/api/v1/users')
+        .post('/api/v1/user')
         .send(anotherUser)
         .end((err, res) => {
           expect(res.statusCode).toBe(409);
@@ -66,7 +66,7 @@ describe('Users', () => {
   describe('User Login', () => {
     it('should send error message when required fields are empty', (done) => {
       request
-        .post('/api/v1/users/login')
+        .post('/api/v1/user/login')
         .send()
         .end((err, res) => {
           expect(res.statusCode).toBe(400);
@@ -78,7 +78,7 @@ describe('Users', () => {
 
     it('should send error message when email is incorrect', (done) => {
       request
-        .post('/api/v1/users/login')
+        .post('/api/v1/user/login')
         .send({ email: 'wrong@mail.com', password: user.password })
         .end((err, res) => {
           expect(res.statusCode).toBe(401);
@@ -89,7 +89,7 @@ describe('Users', () => {
 
     it('should send error message when password is incorrect', (done) => {
       request
-        .post('/api/v1/users/login')
+        .post('/api/v1/user/login')
         .send({ email: anotherUser.email, password: 'password' })
         .end((err, res) => {
           expect(res.statusCode).toBe(401);
@@ -100,7 +100,7 @@ describe('Users', () => {
 
     it('should send token when login is successful', (done) => {
       request
-        .post('/api/v1/users/login')
+        .post('/api/v1/user/login')
         .send(user)
         .end((err, res) => {
           expect(res.statusCode).toBe(200);

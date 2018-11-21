@@ -56,14 +56,20 @@ describe('Delete Location', () => {
   });
 
   it('should delete location when all conditions are satisfied', async (done) => {
+    const parentLocation = await db.Locations.findByPk(1);
+    expect(parentLocation.total).toBe(Number(location.total));
     request
       .delete('/api/v1/location/2')
       .set('authorization', token)
       .end(async (err, res) => {
         const deletedLocation = await db.Locations.findByPk(2);
+        const parentAfterDelete = await db.Locations.findByPk(1);
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Location deleted successfully');
         expect(deletedLocation).toBeFalsy();
+        expect(parentAfterDelete.total).toBe(
+          parentLocation.total - Number(anotherLocation.total),
+        );
         done();
       });
   });
