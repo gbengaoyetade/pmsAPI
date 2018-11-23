@@ -3,14 +3,13 @@ import {
 } from '../utils';
 
 describe('Create location', () => {
-  beforeAll((done) => {
-    seedDatabase();
-    done();
+  beforeAll(async () => {
+    await emptyDatabase();
+    await seedDatabase();
   });
 
-  afterAll((done) => {
-    emptyDatabase();
-    done();
+  afterAll(async () => {
+    await emptyDatabase();
   });
 
   user.userId = 1;

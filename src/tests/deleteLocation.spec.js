@@ -18,6 +18,9 @@ describe('Delete Location', () => {
     await db.Locations.create(anotherLocation);
   });
 
+  afterAll(async () => {
+    await emptyDatabase();
+  });
   user.userId = 1;
   const token = generateToken(user);
   it('should send error when location id is not a number', (done) => {
