@@ -32,12 +32,6 @@ Start application
 $ npm start
 ```
 
-#####Or
-
-```
-$ yarn start
-```
-
 ### Endpoints
 
 | Endpoint             | HTTP Method | Description                                                                         |

@@ -14,6 +14,10 @@ describe('Update Location', () => {
     await db.Locations.create(location);
     await db.Locations.create(anotherLocation);
   });
+
+  afterAll(async () => {
+    await emptyDatabase();
+  });
   user.userId = 1;
   const token = generateToken(user);
   it('should send error message when location does not exist', async (done) => {

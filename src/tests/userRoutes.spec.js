@@ -2,14 +2,12 @@ import { emptyDatabase, user, seedDatabase } from '../utils';
 
 const anotherUser = { email: 'test@web.com', password: 'user-password' };
 describe('Users', () => {
-  beforeAll((done) => {
-    seedDatabase();
-    done();
+  beforeAll(async () => {
+    await seedDatabase();
   });
 
-  afterAll((done) => {
-    emptyDatabase();
-    done();
+  afterAll(async () => {
+    await emptyDatabase();
   });
 
   describe('Create User', () => {
