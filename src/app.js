@@ -1,18 +1,18 @@
-import express from 'express';
-import routes from './routes';
+import express from "express";
+import routes from "./routes";
 
 const app = express();
-
+// some comment
 app.use(express.urlencoded());
 app.use(express.json());
-app.get('/', (req, res) => {
-  res.send({ message: 'Welcome to population management API' });
+app.get("/", (req, res) => {
+  res.send({ message: "Welcome to population management API" });
 });
 
-app.use('/api/v1', routes);
+app.use("/api/v1", routes);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ error: 'Route does not exist' });
+app.all("*", (req, res) => {
+  res.status(404).send({ error: "Route does not exist" });
 });
 
 const port = process.env.PORT || 8080;
